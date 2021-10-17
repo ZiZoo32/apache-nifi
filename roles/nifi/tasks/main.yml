@@ -1,0 +1,33 @@
+---
+# Create User
+- import_tasks: add-user.yml
+  tags: ['add-user']
+
+# Install additional packages & create directories
+- import_tasks: prepare.yml
+  tags: ['prepare']
+
+# Install (download and unpack) NiFi
+- import_tasks: install.yml
+  tags: ['install'] 
+  when: not nifi_result.stat.exists
+
+# Create certificates and config with NiFi ToolKit
+- import_tasks: toolkit.yml
+  tags: ['toolkit']
+
+# Configure NiFi 
+- import_tasks: config.yml
+  tags: ['config']
+
+# Change owner and mode for NiFi directories
+- import_tasks: change-mode.yml
+  tags: ['change-mode']
+
+# Start NiFi service
+- import_tasks: service.yml
+  tags: ['service']
+
+# Uninstall and remove NiFi
+- import_tasks: uninstall.yml
+  tags: ['never', 'uninstall']

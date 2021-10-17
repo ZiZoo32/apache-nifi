@@ -1,0 +1,12 @@
+---
+java: "java-1.8.0-openjdk"
+
+nifi_user: "nifi"
+nifi_group: "nifi"
+nifi_password: "QwErT@13"
+
+nifi_version: "1.14.0"
+nifi_root: "/opt"
+
+nifi_admin: "admin"
+nifi_ou: "NiFi"

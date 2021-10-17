@@ -1,0 +1,29 @@
+---
+sysctl_file: "00-tuneup.conf"
+sysctl_params:
+  net.netfilter.nf_conntrack_tcp_timeout_time_wait:
+    value: "1"
+  net.ipv4.ip_local_port_range:
+    value: "10000 65000"
+
+limits_params:
+  param1:
+    domain: "*"
+    type: "soft"
+    item: "nproc"
+    value: "10000"
+  param2:
+    domain: "*"
+    type: "hard"
+    item: "nproc"
+    value: "10000"
+  param3:
+    domain: "*"
+    type: "soft"
+    item: "nofile"
+    value: "50000"
+  param4:
+    domain: "*"
+    type: "hard"
+    item: "nofile"
+    value: "50000"

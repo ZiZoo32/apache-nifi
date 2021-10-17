@@ -1,0 +1,15 @@
+---
+- name: Add {{ nifi_group }} group
+  group:
+    name: "{{ nifi_group }}"
+    state: present
+  become: true
+
+- name: Add {{ nifi_user }} user
+  user:
+    name: "{{ nifi_user }}"
+    password: "{{ nifi_password | password_hash('sha512', 'salted') }}"
+    group: "{{ nifi_group }}"
+    shell: "/usr/sbin/nologin"
+    state: present
+  become: true

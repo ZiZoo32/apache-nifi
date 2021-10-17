@@ -1,0 +1,28 @@
+---
+- name: Set facts to replace default values in NiFi config
+  set_fact:
+    replace_regexps:
+      - { path: "{{ nifi_root }}/nifi-toolkit-{{ nifi_version }}/{{ ansible_default_ipv4.address }}/nifi.properties", regexp: "nifi.web.https.network.interface.default=$", replace: "nifi.web.https.network.interface.default={{ ansible_default_ipv4.interface }}" }
+      - { path: "{{ nifi_root }}/nifi-{{ nifi_version }}/conf/authorizers.xml", regexp: "<property name=\"Initial User Identity 1\"></property>", replace: "<property name=\"Initial User Identity 1\">CN={{ nifi_admin }}, OU={{ nifi_ou }}</property>" } 
+      - { path: "{{ nifi_root }}/nifi-{{ nifi_version }}/conf/authorizers.xml", regexp: "<property name=\"Initial Admin Identity\"></property>", replace: "<property name=\"Initial Admin Identity\">CN={{ nifi_admin }}, OU={{ nifi_ou }}</property>" }
+
+- name: Change values in NiFi config
+  replace:
+    path: "{{ item.path }}"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+    backup: no
+  with_items: "{{ replace_regexps }}"
+  become: true
+
+- name: Copy files from ToolKit to NiFi config directory
+  copy:
+    src: "{{ nifi_root }}/nifi-toolkit-{{ nifi_version }}/{{ ansible_default_ipv4.address }}/"
+    dest: "{{ nifi_root }}/nifi-{{ nifi_version }}/conf"
+    owner: "{{ nifi_user }}"
+    group: "{{ nifi_group }}"
+    mode: 0644
+    remote_src: yes
+    force: yes
+  become: true
+

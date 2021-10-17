@@ -1,0 +1,22 @@
+---
+- name: Change owner to NiFi
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ nifi_user }}"
+    group: "{{ nifi_group }}"
+    recurse: yes
+  with_items: 
+    - "{{ nifi_root }}/nifi-{{ nifi_version }}"
+    - "{{ nifi_root }}/nifi-toolkit-{{ nifi_version }}"
+  become: true
+
+- name: Change mode for configuration directory
+  file:
+    path: "{{ nifi_root }}/nifi-{{ nifi_version }}/conf"
+    state: directory
+    owner: "{{ nifi_user }}"
+    group: "{{ nifi_group }}"
+    mode: 0755
+    recurse: no
+  become: true

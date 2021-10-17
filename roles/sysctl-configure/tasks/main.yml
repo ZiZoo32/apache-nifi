@@ -1,0 +1,20 @@
+---
+- name: "Configure sysctl parameter"
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value.value }}"
+    sysctl_set: true
+    state: present
+    reload: true
+    sysctl_file: "/etc/sysctl.d/{{ sysctl_file }}"
+  with_dict: "{{ sysctl_params }}"
+  become: true
+
+- name: "Configure limits"
+  pam_limits:
+    domain: "{{ item.value.domain }}"
+    limit_type: "{{ item.value.type }}"
+    limit_item: "{{ item.value.item }}"
+    value: "{{ item.value.value }}"
+  with_dict: "{{ limits_params }}"
+  become: true

@@ -1,0 +1,18 @@
+[Unit]
+Documentation=man:systemd-sysv-generator(8)
+Description=SYSV: Apache NiFi is a dataflow system based on the principles of Flow-Based Programming.
+Before=multi-user.target
+Before=graphical.target
+
+[Service]
+Type=forking
+Restart=no
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=yes
+User={{ nifi_user }}
+Group={{ nifi_group }}
+ExecStart={{ nifi_root }}/nifi-{{ nifi_version }}/bin/nifi.sh start
+ExecStop={{ nifi_root }}/nifi-{{ nifi_version }}/bin/nifi.sh stop

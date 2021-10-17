@@ -1,0 +1,33 @@
+---
+- name: Set facts
+  set_fact:
+    nifi:
+      nifi:
+        url: "https://dlcdn.apache.org/nifi/{{ nifi_version }}/nifi-{{ nifi_version }}-bin.tar.gz"
+        archive: "/tmp/nifi-{{ nifi_version }}-bin.tar.gz"
+      nifi_toolkit:
+        url: "https://dlcdn.apache.org/nifi/{{ nifi_version }}/nifi-toolkit-{{ nifi_version }}-bin.tar.gz"
+        archive: "/tmp/nifi-toolkit-{{ nifi_version }}-bin.tar.gz"
+
+- name: Download Nifi
+  get_url:
+    url: "{{ item.value.url }}"
+    dest: "{{ item.value.archive }}"
+  with_dict: "{{ nifi }}"
+
+- name: Unpack Nifi
+  unarchive:
+    remote_src: true
+    src: "{{ item.value.archive }}"
+    dest: "{{ nifi_root }}"
+    owner: "{{ nifi_user }}"
+    group: "{{ nifi_group }}"
+  with_dict: "{{ nifi }}"
+  become: true
+   
+- name: Remove NiFi archive
+  file:
+    name: "{{ item.value.archive }}"
+    state: absent
+  with_dict: "{{ nifi }}"
+  become: true

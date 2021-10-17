@@ -1,0 +1,27 @@
+---
+- name: Set facts
+  set_fact:
+    nifi_admin_DN: "\"CN={{ nifi_admin }}, OU={{ nifi_ou }}\""
+    nifi_admin_DN_file: "CN={{ nifi_admin }}_OU={{ nifi_ou }}"
+
+- name: Generate certificate, key and config
+  command:
+    argv:
+      - bin/tls-toolkit.sh 
+      - standalone 
+      - -n 
+      - "{{ ansible_default_ipv4.address }}" 
+      - -C 
+      - "{{ nifi_admin_DN }}" 
+    chdir: "{{ nifi_root }}/nifi-toolkit-{{ nifi_version }}"
+    creates: "{{ nifi_root }}/nifi-toolkit-{{ nifi_version }}/{{ ansible_default_ipv4.address }}"
+  become: true
+
+- name: Donwload generated files
+  fetch:
+    src: "{{ item }}"
+    dest: "/tmp"
+  with_items:
+    - "{{ nifi_root }}/nifi-toolkit-{{ nifi_version }}/{{ nifi_admin_DN_file }}.p12"
+    - "{{ nifi_root }}/nifi-toolkit-{{ nifi_version }}/{{ nifi_admin_DN_file }}.password"
+  become: true

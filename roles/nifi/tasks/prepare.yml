@@ -1,0 +1,12 @@
+---
+- name: Check if NiFi installation exists
+  stat:
+    path: "{{ nifi_root }}/nifi-{{ nifi_version }}"
+  register: nifi_result
+
+- name: Install Java & tar
+  yum:
+    name: ['{{ java }}', 'tar']
+    state: present
+    update_cache: yes
+  become: true
