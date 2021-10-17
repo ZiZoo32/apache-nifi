@@ -1,0 +1,6 @@
+- name: Roles config
+  hosts: nifi
+  remote_user: devops
+  gather_facts: true
+  roles:
+    - nifi
